@@ -11,7 +11,6 @@ https://docs.djangoproject.com/en/6.0/ref/settings/
 """
 
 from pathlib import Path
-from datetime import timedelta
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -42,7 +41,6 @@ INSTALLED_APPS = [
     "rest_framework",
     'rest_framework_simplejwt',
     'accounts',
-    'kundali',
 ]
 
 MIDDLEWARE = [
@@ -146,5 +144,3 @@ SIMPLE_JWT = {
     "USER_ID_CLAIM": "user_id",
 }
 
-GEMINI_API_KEY  = "your-google-gemini-api-key-here"
-SWISSEPH_PATH   = BASE_DIR / "swisseph"
