@@ -16,10 +16,10 @@ from .views import (
 
 urlpatterns = [
     # Generate a new Kundali
-    path("generate/",    GenerateKundaliView.as_view(), name="kundali-generate"),
+    path("generate/",GenerateKundaliView.as_view(), name="kundali-generate"),
 
     # List all Kundalis for the current user
-    path("",             KundaliListView.as_view(),     name="kundali-list"),
+    path("",KundaliListView.as_view(),     name="kundali-list"),
 
     # Retrieve or delete a specific Kundali
     path("<int:pk>/",    KundaliDetailView.as_view(),   name="kundali-detail"),
