@@ -27,6 +27,7 @@ media/
 .env
 .env.*
 .venv
+venv
 
 # IDE and Editor files
 .vscode/
@@ -60,7 +61,7 @@ share/python-wheels/
 MANIFEST
 
 # Django migrations (optional - only ignore if you want)
-# migrations/
+migrations/
 
 # Logs
 logs/
