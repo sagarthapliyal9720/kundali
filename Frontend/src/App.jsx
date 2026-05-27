@@ -3,6 +3,7 @@ import Register from "./pages/Register";
 import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
 import Kundli from "./pages/kundli";
+import DailyHoroscop from "./pages/DailyHoroscop";
 
 function App() {
   return (
@@ -12,6 +13,7 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/Kundli" element={<Kundli />} />
+        <Route path="/daily-horoscope" element={<DailyHoroscop />}/>
       </Routes>
     </BrowserRouter>
   );

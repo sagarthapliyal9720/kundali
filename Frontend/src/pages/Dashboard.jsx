@@ -177,7 +177,9 @@ export default function Dashboard() {
                 Generate Kundli
               </button>
 
-              <button className="w-full bg-pink-600 hover:bg-pink-700 text-white py-3 rounded-xl font-semibold transition">
+              <button 
+               onClick={() => navigate("/daily-horoscope")}
+              className="w-full bg-pink-600 hover:bg-pink-700 text-white py-3 rounded-xl font-semibold transition">
                 Daily Horoscope
               </button>
 
