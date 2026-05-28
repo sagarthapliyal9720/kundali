@@ -65,17 +65,18 @@ export default function Register() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100 px-4">
+    <div className="min-h-screen flex items-center justify-center bg-[#160d28] px-4 relative overflow-hidden">
+      <div className="absolute w-[500px] h-[500px] bg-[#3a1c71] opacity-20 blur-3xl rounded-full top-[-120px] left-[-120px]"></div>
 
-      <div className="w-full max-w-md bg-white rounded-3xl shadow-2xl p-8">
-
+    <div className="absolute w-[400px] h-[400px] bg-[#c9922a] opacity-10 blur-3xl rounded-full bottom-[-100px] right-[-100px]"></div>
+      <div className="relative w-full max-w-md bg-[#1e1038]/90 backdrop-blur-md border border-[#c9922a] rounded-3xl shadow-2xl p-8">
         {/* Heading */}
         <div className="text-center mb-8">
-          <h1 className="text-4xl font-bold text-gray-800">
+          <h1 className="text-4xl font-bold text-[#f0e6c8]">
             Create Account
           </h1>
 
-          <p className="text-gray-500 mt-2">
+          <p className="text-[#8b7aa0] mt-2">
             Sign up to get started
           </p>
         </div>
@@ -91,12 +92,11 @@ export default function Register() {
 
           {/* Name */}
           <div>
-            <label className="block text-sm font-semibold text-gray-700 mb-2">
+            <label className="block text-sm font-semibold text-[#f0e6c8] mb-2">
               Full Name
             </label>
 
-            <div className="flex items-center border border-gray-300 rounded-xl px-4">
-              <User className="w-5 h-5 text-gray-400" />
+           <div className="flex items-center border border-[#5b4779] bg-[#140b27] rounded-xl px-4 focus-within:border-[#c9922a] transition">
 
               <input
                 type="text"
@@ -104,7 +104,7 @@ export default function Register() {
                 placeholder="Enter your full name"
                 value={formData.name}
                 onChange={handleChange}
-                className="w-full px-4 py-3 outline-none"
+                className="w-full px-4 py-3 outline-none bg-transparent text-[#f0e6c8] placeholder-[#7f7196]"
                 required
               />
             </div>
@@ -112,11 +112,11 @@ export default function Register() {
 
           {/* Email */}
           <div>
-            <label className="block text-sm font-semibold text-gray-700 mb-2">
+            <label className="block text-sm font-semibold text-[#f0e6c8] mb-2">
               Email Address
             </label>
 
-            <div className="flex items-center border border-gray-300 rounded-xl px-4">
+             <div className="flex items-center border border-[#5b4779] bg-[#140b27] rounded-xl px-4 focus-within:border-[#c9922a] transition">
               <Mail className="w-5 h-5 text-gray-400" />
 
               <input
@@ -125,7 +125,7 @@ export default function Register() {
                 placeholder="Enter your email"
                 value={formData.email}
                 onChange={handleChange}
-                className="w-full px-4 py-3 outline-none"
+                className="w-full px-4 py-3 outline-none bg-transparent text-[#f0e6c8] placeholder-[#7f7196]"
                 required
               />
             </div>
@@ -133,11 +133,11 @@ export default function Register() {
 
           {/* Phone */}
           <div>
-            <label className="block text-sm font-semibold text-gray-700 mb-2">
+            <label className="block text-sm font-semibold text-[#f0e6c8] mb-2">
               Phone Number
             </label>
 
-            <div className="flex items-center border border-gray-300 rounded-xl px-4">
+            <div className="flex items-center border border-[#5b4779] bg-[#140b27] rounded-xl px-4 focus-within:border-[#c9922a] transition">
               <Phone className="w-5 h-5 text-gray-400" />
 
               <input
@@ -146,7 +146,7 @@ export default function Register() {
                 placeholder="Enter your phone number"
                 value={formData.phone}
                 onChange={handleChange}
-                className="w-full px-4 py-3 outline-none"
+                className="w-full px-4 py-3 outline-none bg-transparent text-[#f0e6c8] placeholder-[#7f7196]"
                 required
               />
             </div>
@@ -154,11 +154,11 @@ export default function Register() {
 
           {/* Password */}
           <div>
-            <label className="block text-sm font-semibold text-gray-700 mb-2">
+            <label className="block text-sm font-semibold text-[#f0e6c8] mb-2">
               Password
             </label>
 
-            <div className="flex items-center border border-gray-300 rounded-xl px-4">
+            <div className="flex items-center border border-[#5b4779] bg-[#140b27] rounded-xl px-4 focus-within:border-[#c9922a] transition">
               <Lock className="w-5 h-5 text-gray-400" />
 
               <input
@@ -167,7 +167,7 @@ export default function Register() {
                 placeholder="Enter your password"
                 value={formData.password}
                 onChange={handleChange}
-                className="w-full px-4 py-3 outline-none"
+                className="w-full px-4 py-3 outline-none bg-transparent text-[#f0e6c8] placeholder-[#7f7196]"
                 required
               />
             </div>
@@ -175,11 +175,11 @@ export default function Register() {
 
           {/* Confirm Password */}
           <div>
-            <label className="block text-sm font-semibold text-gray-700 mb-2">
+            <label className="block text-sm font-semibold text-[#f0e6c8] mb-2">
               Confirm Password
             </label>
 
-            <div className="flex items-center border border-gray-300 rounded-xl px-4">
+           <div className="flex items-center border border-[#5b4779] bg-[#140b27] rounded-xl px-4 focus-within:border-[#c9922a] transition">
               <Lock className="w-5 h-5 text-gray-400" />
 
               <input
@@ -188,7 +188,7 @@ export default function Register() {
                 placeholder="Confirm your password"
                 value={formData.confirmPassword}
                 onChange={handleChange}
-                className="w-full px-4 py-3 outline-none"
+                className="w-full px-4 py-3 outline-none bg-transparent text-[#f0e6c8] placeholder-[#7f7196]"
                 required
               />
             </div>
@@ -197,19 +197,18 @@ export default function Register() {
           {/* Button */}
           <button
             type="submit"
-            className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-3 rounded-xl transition duration-300"
-          >
+            className="w-full bg-[#c9922a] hover:bg-[#e0aa3e] text-[#160d28] font-bold py-3 rounded-xl transition duration-300"          >
             Create Account
           </button>
         </form>
 
         {/* Footer */}
-        <p className="text-center text-gray-500 text-sm mt-6">
+        <p className="text-center text-[#8b7aa0] text-sm mt-6">
           Already have an account?
 
           <Link
             to="/login"
-            className="text-indigo-600 font-semibold hover:underline ml-1"
+            className="text-[#c9922a] font-semibold hover:underline ml-1"
           >
             Login
           </Link>
