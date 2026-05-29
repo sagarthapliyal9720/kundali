@@ -3,7 +3,6 @@ import Register from "./pages/Register";
 import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
 import Kundli from "./pages/kundli";
-import DailyHoroscop from "./pages/DailyHoroscop";
 import Birthchart from "./pages/Birthchart";
 import DailyHoroscope from "./pages/DailyHoroscope";
 

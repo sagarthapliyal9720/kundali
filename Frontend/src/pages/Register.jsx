@@ -65,13 +65,20 @@ export default function Register() {
   };
 
   return (
+
     <div className="min-h-screen flex items-center justify-center bg-[#160d28] px-4 relative overflow-hidden">
+
+      {/* Background Glow */}
       <div className="absolute w-[500px] h-[500px] bg-[#3a1c71] opacity-20 blur-3xl rounded-full top-[-120px] left-[-120px]"></div>
 
-    <div className="absolute w-[400px] h-[400px] bg-[#c9922a] opacity-10 blur-3xl rounded-full bottom-[-100px] right-[-100px]"></div>
+      <div className="absolute w-[400px] h-[400px] bg-[#c9922a] opacity-10 blur-3xl rounded-full bottom-[-100px] right-[-100px]"></div>
+
+      {/* Card */}
       <div className="relative w-full max-w-md bg-[#1e1038]/90 backdrop-blur-md border border-[#c9922a] rounded-3xl shadow-2xl p-8">
+
         {/* Heading */}
         <div className="text-center mb-8">
+
           <h1 className="text-4xl font-bold text-[#f0e6c8]">
             Create Account
           </h1>
@@ -79,24 +86,29 @@ export default function Register() {
           <p className="text-[#8b7aa0] mt-2">
             Sign up to get started
           </p>
+
         </div>
 
         {/* Error */}
         {error && (
-          <div className="bg-red-100 border border-red-300 text-red-600 px-4 py-3 rounded-xl mb-5 text-sm">
+          <div className="bg-red-500/20 border border-red-500 text-red-300 px-4 py-3 rounded-xl mb-5 text-sm">
             {error}
           </div>
         )}
 
+        {/* Form */}
         <form onSubmit={handleSubmit} className="space-y-5">
 
           {/* Name */}
           <div>
+
             <label className="block text-sm font-semibold text-[#f0e6c8] mb-2">
               Full Name
             </label>
 
-           <div className="flex items-center border border-[#5b4779] bg-[#140b27] rounded-xl px-4 focus-within:border-[#c9922a] transition">
+            <div className="flex items-center border border-[#5b4779] bg-[#140b27] rounded-xl px-4 focus-within:border-[#c9922a] transition">
+
+              <User className="w-5 h-5 text-[#c9922a]" />
 
               <input
                 type="text"
@@ -107,17 +119,20 @@ export default function Register() {
                 className="w-full px-4 py-3 outline-none bg-transparent text-[#f0e6c8] placeholder-[#7f7196]"
                 required
               />
+
             </div>
           </div>
 
           {/* Email */}
           <div>
+
             <label className="block text-sm font-semibold text-[#f0e6c8] mb-2">
               Email Address
             </label>
 
-             <div className="flex items-center border border-[#5b4779] bg-[#140b27] rounded-xl px-4 focus-within:border-[#c9922a] transition">
-              <Mail className="w-5 h-5 text-gray-400" />
+            <div className="flex items-center border border-[#5b4779] bg-[#140b27] rounded-xl px-4 focus-within:border-[#c9922a] transition">
+
+              <Mail className="w-5 h-5 text-[#c9922a]" />
 
               <input
                 type="email"
@@ -128,17 +143,20 @@ export default function Register() {
                 className="w-full px-4 py-3 outline-none bg-transparent text-[#f0e6c8] placeholder-[#7f7196]"
                 required
               />
+
             </div>
           </div>
 
           {/* Phone */}
           <div>
+
             <label className="block text-sm font-semibold text-[#f0e6c8] mb-2">
               Phone Number
             </label>
 
             <div className="flex items-center border border-[#5b4779] bg-[#140b27] rounded-xl px-4 focus-within:border-[#c9922a] transition">
-              <Phone className="w-5 h-5 text-gray-400" />
+
+              <Phone className="w-5 h-5 text-[#c9922a]" />
 
               <input
                 type="tel"
@@ -149,17 +167,20 @@ export default function Register() {
                 className="w-full px-4 py-3 outline-none bg-transparent text-[#f0e6c8] placeholder-[#7f7196]"
                 required
               />
+
             </div>
           </div>
 
           {/* Password */}
           <div>
+
             <label className="block text-sm font-semibold text-[#f0e6c8] mb-2">
               Password
             </label>
 
             <div className="flex items-center border border-[#5b4779] bg-[#140b27] rounded-xl px-4 focus-within:border-[#c9922a] transition">
-              <Lock className="w-5 h-5 text-gray-400" />
+
+              <Lock className="w-5 h-5 text-[#c9922a]" />
 
               <input
                 type="password"
@@ -170,17 +191,20 @@ export default function Register() {
                 className="w-full px-4 py-3 outline-none bg-transparent text-[#f0e6c8] placeholder-[#7f7196]"
                 required
               />
+
             </div>
           </div>
 
           {/* Confirm Password */}
           <div>
+
             <label className="block text-sm font-semibold text-[#f0e6c8] mb-2">
               Confirm Password
             </label>
 
-           <div className="flex items-center border border-[#5b4779] bg-[#140b27] rounded-xl px-4 focus-within:border-[#c9922a] transition">
-              <Lock className="w-5 h-5 text-gray-400" />
+            <div className="flex items-center border border-[#5b4779] bg-[#140b27] rounded-xl px-4 focus-within:border-[#c9922a] transition">
+
+              <Lock className="w-5 h-5 text-[#c9922a]" />
 
               <input
                 type="password"
@@ -191,19 +215,23 @@ export default function Register() {
                 className="w-full px-4 py-3 outline-none bg-transparent text-[#f0e6c8] placeholder-[#7f7196]"
                 required
               />
+
             </div>
           </div>
 
           {/* Button */}
           <button
             type="submit"
-            className="w-full bg-[#c9922a] hover:bg-[#e0aa3e] text-[#160d28] font-bold py-3 rounded-xl transition duration-300"          >
+            className="w-full bg-[#c9922a] hover:bg-[#e0aa3e] text-[#160d28] font-bold py-3 rounded-xl transition duration-300 shadow-lg"
+          >
             Create Account
           </button>
+
         </form>
 
         {/* Footer */}
         <p className="text-center text-[#8b7aa0] text-sm mt-6">
+
           Already have an account?
 
           <Link
@@ -212,6 +240,7 @@ export default function Register() {
           >
             Login
           </Link>
+
         </p>
 
       </div>
