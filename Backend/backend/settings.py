@@ -134,6 +134,9 @@ AUTH_USER_MODEL = 'accounts.User'
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:5173",   # React Vite dev server
 ]
+MEDIA_URL = "/media/"
+MEDIA_ROOT = BASE_DIR / "media"
+
 from datetime import timedelta
 
 SIMPLE_JWT = {
