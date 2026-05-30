@@ -4,6 +4,8 @@ import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 
 export default function Login() {
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -18,12 +20,12 @@ export default function Login() {
     });
   };
 
-  const handleSubmit = async (e) => {
-
+const handleSubmit = async (e) => {
   e.preventDefault();
 
-  try {
+  setLoading(true);
 
+  try {
     const response = await axios.post(
       "http://127.0.0.1:8000/api/login/",
       {
@@ -39,18 +41,21 @@ export default function Login() {
       response.data.access
     );
 
-    alert("Login Successful");
+    // alert("Login Successful");
 
     navigate("/dashboard");
 
   } catch (error) {
 
-    console.log(error);
+  console.log(error);
 
-    alert(
-      error.response?.data?.message ||
-      "Invalid Credentials"
-    );
+  setError(
+    error.response?.data?.message ||
+    "Invalid Credentials"
+  );
+
+}finally {
+    setLoading(false);
   }
 };
 
@@ -130,14 +135,27 @@ export default function Login() {
             Forgot Password?
           </button>
         </div>
+        {error && (
+  <div className="bg-red-500/10 border border-red-500 text-red-400 px-4 py-3 rounded-xl text-sm">
+    {error}
+  </div>
+)}
 
         {/* Button */}
         <button
           type="submit"
-          className="w-full bg-[#c9922a] hover:bg-[#e0aa3e] text-[#160d28] font-bold py-3 rounded-xl transition duration-300 shadow-lg"
+          disabled={loading}
+          className="w-full bg-[#c9922a] hover:bg-[#e0aa3e] text-[#160d28] font-bold py-3 rounded-xl transition duration-300 shadow-lg disabled:opacity-70 disabled:cursor-not-allowed"
         >
-          Login
-        </button>
+          {loading ? (
+            <div className="flex items-center justify-center gap-2">
+              <div className="w-5 h-5 border-2 border-[#160d28] border-t-transparent rounded-full animate-spin"></div>
+              Logging in...
+            </div>
+          ) : (
+            "Login"
+          )}
+      </button>
       </form>
 
       {/* Footer */}

@@ -5,6 +5,8 @@ import Dashboard from "./pages/Dashboard";
 import Kundli from "./pages/kundli";
 import Birthchart from "./pages/Birthchart";
 import DailyHoroscope from "./pages/DailyHoroscope";
+import Profile from "./pages/Profile";
+import UpdateProfile from "./pages/UpdateProfile";
 
 function App() {
   return (
@@ -16,6 +18,8 @@ function App() {
         <Route path="/Kundli" element={<Kundli />} />
         <Route path="/daily-horoscope" element={<DailyHoroscope />}/>
         <Route path="/birthchart" element={<Birthchart/>} />
+        <Route path="/profile" element={<Profile />} />
+        <Route path="/update-profile" element={<UpdateProfile />} />
       </Routes>
     </BrowserRouter>
   );

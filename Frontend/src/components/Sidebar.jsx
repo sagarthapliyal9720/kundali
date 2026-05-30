@@ -49,7 +49,8 @@ export default function Sidebar() {
               Dashboard
             </button>
 
-            <button className="flex items-center gap-3 w-full px-4 py-3 rounded-2xl hover:bg-[#2d1b4e] transition">
+            <button className="flex items-center gap-3 w-full px-4 py-3 rounded-2xl hover:bg-[#2d1b4e] transition"
+             onClick={() => navigate("/profile")}>
               <User size={22} />
               Profile
             </button>
