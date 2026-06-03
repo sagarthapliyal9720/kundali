@@ -5,19 +5,148 @@ from rest_framework.views import APIView
 from rest_framework_simplejwt.tokens import RefreshToken
 from .serializers import RegisterSerializer,ProfileSerializer
 from rest_framework.permissions import IsAuthenticated
+import uuid
+from django.core.mail import send_mail
+from django.conf import settings
+from random import randint
+from django.utils import timezone
+from datetime import timedelta 
+from random import randint
+
+
+
 
 User = get_user_model()
 
-class RegisterView(APIView):
+class SendRegisterOTPView(APIView):
+
     def post(self, request):
-        serializer = RegisterSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
+
+        email = request.data.get("email")
+
+        if User.objects.filter(email=email).exists():
             return Response(
-                {'message': "User created successfully", 'data': serializer.data},
-                status=status.HTTP_201_CREATED
+                {"error": "Email already registered"},
+                status=400
             )
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+        otp = str(randint(100000, 999999))
+
+        request.session["register_otp"] = otp
+        request.session["register_email"] = email
+        request.session["register_name"] = request.data.get("name")
+        request.session["register_phone"] = request.data.get("phone")
+        request.session["register_password"] = request.data.get("password")
+
+        request.session.save()
+
+        print("OTP =", otp)
+        print("SESSION OTP =", request.session.get("register_otp"))
+        print("SESSION KEY =", request.session.session_key)
+
+        send_mail(
+            "Email Verification OTP",
+            f"Your OTP is: {otp}",
+            settings.DEFAULT_FROM_EMAIL,
+            [email],
+            fail_silently=False
+        )
+
+        return Response({
+            "message": "OTP Sent"
+        })
+    
+class VerifyRegisterOTPView(APIView):
+
+    def post(self, request):
+
+        print("VERIFY REGISTER OTP HIT")
+
+        print("VERIFY SESSION KEY =", request.session.session_key)
+
+        otp = request.data.get("otp")
+
+        saved_otp = request.session.get("register_otp")
+
+        print("USER OTP =", otp)
+        print("SESSION OTP =", saved_otp)
+
+        if not saved_otp:
+            return Response(
+                {"error": "Session Expired. Request OTP Again."},
+                status=400
+            )
+
+        if otp != saved_otp:
+            return Response(
+                {"error": "Invalid OTP"},
+                status=400
+            )
+
+        email = request.session.get("register_email")
+        name = request.session.get("register_name")
+        phone = request.session.get("register_phone")
+        password = request.session.get("register_password")
+
+        user = User.objects.create_user(
+            username=email,
+            email=email,
+            password=password,
+            phone=phone,
+            name=name
+        )
+
+        user.is_verified = True
+        user.save()
+
+        request.session.flush()
+
+        return Response({
+            "message": "Registration Successful"
+        })
+
+# class RegisterView(APIView):
+
+#     def post(self, request):
+
+#         name = request.data.get("name")
+#         email = request.data.get("email")
+#         phone = request.data.get("phone")
+#         password = request.data.get("password")
+
+#         if User.objects.filter(email=email).exists():
+#             return Response(
+#                 {"error": "Email already exists"},
+#                 status=400
+#             )
+
+#         otp = str(randint(100000, 999999))
+
+#         user = User.objects.create_user(
+#             email=email,
+#             username=email,
+#             name=name,
+#             phone=phone,
+#             password=password,
+#         )
+
+#         user.otp = otp
+#         user.otp_created_at = timezone.now()
+#         user.otp_verified = False
+#         user.save()
+
+#         send_mail(
+#             "Email Verification OTP",
+#             f"Your OTP is: {otp}",
+#             settings.DEFAULT_FROM_EMAIL,
+#             [email],
+#             fail_silently=False
+#         )
+
+#         return Response({
+#             "message": "OTP sent to email",
+#             "email": email
+#         })
 
 
 class LoginView(APIView):
@@ -28,6 +157,14 @@ class LoginView(APIView):
         password = request.data.get("password")
 
         user = User.objects.filter(email=email).first()
+
+        if user and not user.is_verified:
+            return Response(
+        {
+            "error": "Please verify your email first"
+        },
+        status=400
+    )
 
         if user and user.check_password(password):
 
@@ -246,3 +383,112 @@ class DailyPanchangView2(APIView):
 #         }
 
 #         return Response(final_data)
+
+class ForgotPasswordView(APIView):
+
+    def post(self, request):
+
+        email = request.data.get("email")
+
+        try:
+
+            user = User.objects.get(email=email)
+
+            otp = str(randint(100000, 999999))
+
+            user.otp = otp
+            user.otp_created_at = timezone.now()
+            user.otp_verified = False
+            user.save()
+
+            send_mail(
+                "Password Reset OTP",
+                f"Your OTP is: {otp}",
+                settings.DEFAULT_FROM_EMAIL,
+                [email],
+                fail_silently=False
+            )
+
+            return Response({
+                "message": "OTP Sent"
+            })
+
+        except User.DoesNotExist:
+
+            return Response(
+                {"error": "User not found"},
+                status=404
+            )
+              
+class VerifyOTPView(APIView):
+
+    def post(self, request):
+
+        email = request.data.get("email")
+        otp = request.data.get("otp")
+
+        try:
+
+            user = User.objects.get(email=email)
+
+            if user.otp != otp:
+                return Response(
+                    {"error": "Invalid OTP"},
+                    status=400
+                )
+
+            if timezone.now() - user.otp_created_at > timedelta(minutes=5):
+                return Response(
+                    {"error": "OTP Expired"},
+                    status=400
+                )
+
+            user.otp_verified = True
+            user.save()
+
+            return Response({
+                "message": "OTP Verified"
+            })
+
+        except User.DoesNotExist:
+
+            return Response(
+                {"error": "User not found"},
+                status=404
+            )
+        
+class ResetPasswordView(APIView):
+
+    def post(self, request):
+
+        email = request.data.get("email")
+        password = request.data.get("password")
+
+        try:
+
+            user = User.objects.get(email=email)
+
+            if not user.otp_verified:
+                return Response(
+                    {"error": "Verify OTP first"},
+                    status=400
+                )
+
+            user.set_password(password)
+
+            user.otp = None
+            user.otp_created_at = None
+            user.otp_verified = False
+
+            user.save()
+
+            return Response({
+                "message": "Password Updated"
+            })
+
+        except User.DoesNotExist:
+
+            return Response(
+                {"error": "User not found"},
+                status=404
+            )
