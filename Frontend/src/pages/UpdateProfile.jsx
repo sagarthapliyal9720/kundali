@@ -27,7 +27,7 @@ export default function EditProfile() {
       const token = localStorage.getItem("token");
 
       const response = await axios.get(
-        "http://127.0.0.1:8000/api/profile/",
+        "http://localhost:8000/api/profile/",
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -39,7 +39,7 @@ export default function EditProfile() {
 
       if (response.data.profile_image) {
         setPreview(
-          `http://127.0.0.1:8000${response.data.profile_image}`
+          `http://localhost:8000${response.data.profile_image}`
         );
       }
     } catch (error) {
@@ -93,7 +93,7 @@ export default function EditProfile() {
       }
 
       await axios.put(
-        "http://127.0.0.1:8000/api/profile/",
+        "http://localhost:8000/api/profile/",
         data,
         {
           headers: {

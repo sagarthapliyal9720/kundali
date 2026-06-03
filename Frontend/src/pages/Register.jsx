@@ -75,23 +75,17 @@ export default function Register() {
       setLoading(true)
 
       const response = await axios.post(
-
-        "http://127.0.0.1:8000/api/register/",
-
-        {
-
-          name: formData.name,
-
-          email: formData.email,
-
-          phone: formData.phone,
-
-          password: formData.password,
-
-        }
-
-      );
-
+  "http://localhost:8000/api/send-register-otp/",
+  {
+    name: formData.name,
+    email: formData.email,
+    phone: formData.phone,
+    password: formData.password,
+  },
+  {
+    withCredentials: true,
+  }
+);
 
 
       console.log(response.data);
@@ -102,7 +96,8 @@ export default function Register() {
 
 
 
-      navigate("/login");
+      localStorage.setItem("registerEmail", formData.email);
+      navigate("/verify-register-otp");
 
 
 

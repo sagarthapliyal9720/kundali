@@ -27,7 +27,7 @@ export default function DailyHoroscope() {
   async function Fetchdailypachnag() {
     try {
       const response = await axios.get(
-        "http://127.0.0.1:8000/accounts/daily-panchang/",
+        "http://localhost:8000/accounts/daily-panchang/",
       );
 
       console.log(response.data);
@@ -49,7 +49,7 @@ export default function DailyHoroscope() {
       setLoading(true);
 
       const response = await axios.post(
-        "http://127.0.0.1:8000/accounts/daily-horoscope/",
+        "http://localhost:8000/accounts/daily-horoscope/",
         {
           sign: sign,
         },

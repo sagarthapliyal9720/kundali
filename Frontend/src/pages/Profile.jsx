@@ -26,7 +26,7 @@ export default function UpdateProfile() {
   const fetchCurrentProfile = async () => {
     try {
       const token = localStorage.getItem("token");
-      const res = await axios.get("http://127.0.0.1:8000/api/profile/", {
+      const res = await axios.get("http://localhost:8000/api/profile/", {
         headers: { Authorization: `Bearer ${token}` },
       });
 

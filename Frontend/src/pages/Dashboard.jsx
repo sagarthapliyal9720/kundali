@@ -46,7 +46,7 @@ export default function Dashboard() {
     try {
       const token = localStorage.getItem("token");
       const response = await axios.get(
-        "http://127.0.0.1:8000/api/kundali/",
+        "http://localhost:8000/api/kundali/",
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -65,7 +65,7 @@ export default function Dashboard() {
     try {
       const token = localStorage.getItem("token");
       await axios.delete(
-        `http://127.0.0.1:8000/api/kundali/${id}/`,
+        `http://localhost:8000/api/kundali/${id}/`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
