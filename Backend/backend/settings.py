@@ -170,7 +170,11 @@ EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 
 EMAIL_HOST_USER = "ad2955001@smtp-brevo.com"
-import os
 
-EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD")
+from decouple import config
+
+EMAIL_HOST_PASSWORD = config("EMAIL_HOST_PASSWORD")
+
+
+
 DEFAULT_FROM_EMAIL = "ghildiyalmanish6397@gmail.com"
