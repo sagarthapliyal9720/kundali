@@ -11,6 +11,7 @@ import ForgotPassword from "./pages/Forgotpassword";
 import ResetPassword from "./pages/Resetpassword";
 import VerifyOTP from "./pages/VerifyOTP";
 import VerifyRegisterOTP from "./pages/VerifyRegisterOTP";
+import ChatPage from "./pages/ChatPage";
 
 
 function App() {
@@ -28,7 +29,8 @@ function App() {
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/reset-password" element={<ResetPassword />} />
         <Route path="/verify-otp"element={<VerifyOTP />}/>
-        <Route
+        <Route path="/chat" element={<ChatPage />} />
+        <Route 
   path="/verify-register-otp"
   element={<VerifyRegisterOTP />}
 />

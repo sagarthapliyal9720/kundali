@@ -50,6 +50,7 @@ export default function Kundli() {
       navigate("/birthchart", {
         state: {
           kundliData: response.data,
+          kundaliId: response.data.id,
         },
       });
     } catch (error) {

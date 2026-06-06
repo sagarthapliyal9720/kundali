@@ -1,11 +1,45 @@
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import Sidebar from "../components/Sidebar";
+
+const TOPIC_CONFIG = {
+  Relationship: {
+    topic: "relationship",
+    question:
+      "Based on my Kundali, give me a detailed analysis of my love life and relationships. What does my chart say about finding a partner, the nature of my relationships, and compatibility?",
+  },
+  Career: {
+    topic: "career",
+    question:
+      "Based on my Kundali, what does my birth chart say about my career and professional life? Which fields suit me best, and what does my current Dasha indicate for career growth?",
+  },
+  Health: {
+    topic: "health",
+    question:
+      "Based on my Kundali, what does my birth chart reveal about my health? Are there any areas I should be careful about, and what does my chart suggest for maintaining good health?",
+  },
+  Wealth: {
+    topic: "wealth",
+    question:
+      "Based on my Kundali, what does my birth chart say about wealth and financial prosperity? What are the prospects for accumulating wealth, and when are the most favourable financial periods?",
+  },
+  Education: {
+    topic: "education",
+    question:
+      "Based on my Kundali, what does my birth chart reveal about my education and learning abilities? Which subjects or fields of study are most favourable for me?",
+  },
+  Other: {
+    topic: null,
+    question: null,
+  },
+};
 
 export default function Birthchart() {
 
   const location = useLocation();
+  const navigate = useNavigate();
 
   const kundliData = location.state?.kundliData;
+  const kundaliId = location.state?.kundaliId;
 
   const d1 = kundliData?.kundali_data?.D1 || {};
 
@@ -41,6 +75,19 @@ export default function Birthchart() {
       </p>
     ))
   );
+
+  const handleTopicClick = (label) => {
+    const config = TOPIC_CONFIG[label];
+    navigate("/chat", {
+      state: {
+        kundaliId,
+        kundliData,
+        topic: config.topic,
+        initialQuestion: config.question,
+        topicLabel: label,
+      },
+    });
+  };
 
   return (
     <div className="min-h-screen bg-[#160d28] flex relative overflow-hidden">
@@ -206,16 +253,10 @@ export default function Birthchart() {
         </div>
         {/* Analysis Tabs */}
 <div className="flex flex-wrap justify-center gap-3 mt-6">
-  {[
-    "Relationship",
-    "Career",
-    "Health",
-    "Wealth",
-    "Education",
-    "Other"
-  ].map((item) => (
+  {Object.keys(TOPIC_CONFIG).map((item) => (
     <button
       key={item}
+      onClick={() => handleTopicClick(item)}
       className="
         px-5 py-2
         bg-[#241443]
