@@ -35,7 +35,7 @@ export default function Kundli() {
       };
 
       const response = await axios.post(
-        "http://localhost:8000/kundali/generate/",
+        "http://localhost:8000/api/kundali/generate/",
         payload,
         {
           headers: {

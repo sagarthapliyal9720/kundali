@@ -75,7 +75,7 @@ export default function Register() {
       setLoading(true)
 
       const response = await axios.post(
-  "http://localhost:8000/api/send-register-otp/",
+    "http://localhost:8000/api/send-register-otp/",
   {
     name: formData.name,
     email: formData.email,

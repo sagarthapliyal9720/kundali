@@ -204,8 +204,38 @@ export default function Birthchart() {
             {renderPlanets(12)}
           </div>
         </div>
+        {/* Analysis Tabs */}
+<div className="flex flex-wrap justify-center gap-3 mt-6">
+  {[
+    "Relationship",
+    "Career",
+    "Health",
+    "Wealth",
+    "Education",
+    "Other"
+  ].map((item) => (
+    <button
+      key={item}
+      className="
+        px-5 py-2
+        bg-[#241443]
+        border border-[#c9922a]
+        text-[#f0e6c8]
+        rounded-full
+        hover:bg-[#c9922a]
+        hover:text-[#160d28]
+        transition-all duration-300
+        font-medium
+      "
+    >
+      {item}
+    </button>
+  ))}
+</div>
+      
       </div>
     </div>
+    
     </div>
   );
 }
