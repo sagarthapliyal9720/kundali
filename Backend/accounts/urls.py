@@ -1,6 +1,6 @@
 from django.urls import path
-from .views import SendRegisterOTPView, LoginView,DailyHoroscopeView,DailyPanchangView2,ProfileView
-from .views import ForgotPasswordView, VerifyOTPView, ResetPasswordView, VerifyRegisterOTPView
+from .views import SendRegisterOTPView, LoginView,DailyHoroscopeView,DailyPanchangView2,ProfileView, ForgotPasswordView, VerifyOTPView, ResetPasswordView, VerifyRegisterOTPView
+
 
 
 urlpatterns = [

@@ -160,7 +160,7 @@ SIMPLE_JWT = {
     "USER_ID_CLAIM": "user_id",
 }
 
-GEMINI_API_KEY  = "your-google-gemini-api-key-here"
+
 SWISSEPH_PATH   = BASE_DIR / "swisseph"
 
 EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
@@ -175,6 +175,8 @@ from decouple import config
 
 EMAIL_HOST_PASSWORD = config("EMAIL_HOST_PASSWORD")
 
+from decouple import config
 
+GEMINI_API_KEY = config("GEMINI_API_KEY")
 
 DEFAULT_FROM_EMAIL = "ghildiyalmanish6397@gmail.com"
