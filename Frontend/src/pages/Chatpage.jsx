@@ -23,7 +23,7 @@ const TOPIC_ICONS = {
 
 function getToken() {
   // Adjust this to wherever you store the JWT (localStorage, context, etc.)
-  return localStorage.getItem("access_token") || "";
+  return localStorage.getItem("token") || "";
 }
 
 // ── Main Component ───────────────────────────────────────────────────────────
