@@ -12,4 +12,4 @@ pyswisseph
 geopy
 astral
 djangorestframework
-google-generativeai
+google-genai

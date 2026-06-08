@@ -279,41 +279,62 @@ class AskKundaliView(APIView):
 # LLM caller — swap this for any provider (OpenAI, Anthropic, Gemini, etc.)
 # ---------------------------------------------------------------------------
 
+# def _call_llm(prompt: str) -> str:
+#     """
+#     Send the prompt to your LLM and return the text response.
+
+#     Currently wired to OpenAI (gpt-4o-mini) as an example.
+#     To switch:
+#       - Anthropic Claude : use anthropic.Anthropic().messages.create(...)
+#       - Google Gemini    : use google.generativeai.GenerativeModel(...)
+#       - Local Ollama     : call http://localhost:11434/api/generate
+
+#     Set OPENAI_API_KEY (or equivalent) in your .env / Django settings.
+    
+#     Google Gemini — free tier, perfect for testing."""
+    
+#     import google.generativeai as genai
+#     from django.conf import settings                                 # pip install openai
+
+#     genai.configure(api_key=settings.GEMINI_API_KEY)
+#     model    = genai.GenerativeModel("gemini-1.5-flash")
+#     response = model.generate_content(prompt)
+#     return response.text
+#     # response = client.chat.completions.create(
+#     #     messages=[
+#     #         {
+#     #             "role": "system",
+#     #             "content": (
+#     #                 "You are an expert Vedic astrologer with deep knowledge of "
+#     #                 "Jyotisha. Provide accurate, respectful, and helpful readings "
+#     #                 "based on the chart data provided. Always note that astrology "
+#     #                 "is a guidance tool, not a definitive prediction."
+#     #             ),
+#     #         },
+#     #         {"role": "user", "content": prompt},
+#     #     ],
+#     #     temperature=0.7,
+#     #     max_tokens=1000,
+#     # )
+#     # return response.choices[0].message.content.strip()
+
 def _call_llm(prompt: str) -> str:
-    """
-    Send the prompt to your LLM and return the text response.
+    from google import genai
+    from django.conf import settings
 
-    Currently wired to OpenAI (gpt-4o-mini) as an example.
-    To switch:
-      - Anthropic Claude : use anthropic.Anthropic().messages.create(...)
-      - Google Gemini    : use google.generativeai.GenerativeModel(...)
-      - Local Ollama     : call http://localhost:11434/api/generate
+    client = genai.Client(api_key=settings.GEMINI_API_KEY)
 
-    Set OPENAI_API_KEY (or equivalent) in your .env / Django settings.
-    
-    Google Gemini — free tier, perfect for testing."""
-    
-    import google.generativeai as genai
-    from django.conf import settings                                 # pip install openai
+    try:
+        response = client.models.generate_content(
+            model="gemini-2.5-flash",   # current free tier model
+            contents=prompt,
+        )
+        return response.text
 
-    genai.configure(api_key=settings.GEMINI_API_KEY)
-    model    = genai.GenerativeModel("gemini-2.0-flash")
-    response = model.generate_content(prompt)
-    return response.text
-    # response = client.chat.completions.create(
-    #     messages=[
-    #         {
-    #             "role": "system",
-    #             "content": (
-    #                 "You are an expert Vedic astrologer with deep knowledge of "
-    #                 "Jyotisha. Provide accurate, respectful, and helpful readings "
-    #                 "based on the chart data provided. Always note that astrology "
-    #                 "is a guidance tool, not a definitive prediction."
-    #             ),
-    #         },
-    #         {"role": "user", "content": prompt},
-    #     ],
-    #     temperature=0.7,
-    #     max_tokens=1000,
-    # )
-    # return response.choices[0].message.content.strip()
+    except Exception as e:
+        error_str = str(e)
+        if "429" in error_str or "quota" in error_str.lower():
+            raise RuntimeError("API quota exceeded. Please try again in a few minutes.")
+        if "404" in error_str:
+            raise RuntimeError("Gemini model not found. Check model name in views.py.")
+        raise
