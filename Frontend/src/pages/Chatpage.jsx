@@ -6,7 +6,6 @@ import Sidebar from "../components/Sidebar";
 
 const API_BASE = import.meta.env.VITE_API_BASE_URL || "http://127.0.0.1:8000";
 
-// Shown when user clicks "Other" — LLM asks what they want
 const OTHER_WELCOME =
   "Namaste! 🙏 I'm your Vedic astrology guide. I've studied your birth chart carefully. What would you like to know? You can ask me about:\n\n• Love & relationships\n• Career & business\n• Health & wellness\n• Wealth & finances\n• Education & learning\n• Travel, family, spirituality, and more\n\nWhat's on your mind?";
 
@@ -19,62 +18,60 @@ const TOPIC_ICONS = {
   Other: "✨",
 };
 
-// ── Helper ───────────────────────────────────────────────────────────────────
+// ── Helpers ───────────────────────────────────────────────────────────────────
 
 function getToken() {
-  // Adjust this to wherever you store the JWT (localStorage, context, etc.)
   return localStorage.getItem("token") || "";
 }
 
-// ── Main Component ───────────────────────────────────────────────────────────
+// Translation calls the Django backend which reuses the already-configured Gemini key.
+// No new API key or package needed on the frontend.
+async function translateToHindi(text) {
+  const res = await fetch(`${API_BASE}/api/kundali/translate/`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${getToken()}`,
+    },
+    body: JSON.stringify({ text }),
+  });
+  if (!res.ok) throw new Error("Translation failed");
+  const data = await res.json();
+  return data.translated;
+}
+
+// ── Main Component ────────────────────────────────────────────────────────────
 
 export default function ChatPage() {
   const location = useLocation();
   const navigate = useNavigate();
 
-  const {
-    kundaliId,
-    kundliData,
-    topic,
-    initialQuestion,
-    topicLabel,
-  } = location.state || {};
+  const { kundaliId, kundliData, topic, initialQuestion, topicLabel } =
+    location.state || {};
 
-  const [messages, setMessages] = useState([]);   // { role: "user"|"ai", text, loading? }
+  const [messages, setMessages] = useState([]);
   const [inputText, setInputText] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const bottomRef = useRef(null);
   const inputRef = useRef(null);
 
-  // ── Auto-scroll to latest message ────────────────────────────────────────
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
-  // ── On mount: fire initial message ────────────────────────────────────────
   useEffect(() => {
-    if (!kundaliId) {
-      // No kundali in state — redirect back
-      navigate("/birthchart");
-      return;
-    }
-
+    if (!kundaliId) { navigate("/birthchart"); return; }
     if (topicLabel === "Other" || !initialQuestion) {
-      // "Other" button → show welcome message from "AI" directly, no API call
       setMessages([{ role: "ai", text: OTHER_WELCOME }]);
     } else {
-      // Topic button → show user message then call API
       const userMsg = { role: "user", text: initialQuestion };
       setMessages([userMsg]);
       callAskAPI(initialQuestion, topic, [userMsg]);
     }
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
-  // ── API call ──────────────────────────────────────────────────────────────
   const callAskAPI = async (question, topicToSend, currentMessages) => {
     setIsLoading(true);
-
-    // Add a loading placeholder bubble
     const loadingMsg = { role: "ai", text: "", loading: true };
     setMessages((prev) => [...(currentMessages || prev), loadingMsg]);
 
@@ -85,10 +82,7 @@ export default function ChatPage() {
           "Content-Type": "application/json",
           Authorization: `Bearer ${getToken()}`,
         },
-        body: JSON.stringify({
-          question,
-          topic: topicToSend || undefined,
-        }),
+        body: JSON.stringify({ question, topic: topicToSend || undefined }),
       });
 
       if (!res.ok) {
@@ -99,7 +93,6 @@ export default function ChatPage() {
       const data = await res.json();
       const answer = data.answer || "I could not generate a response. Please try again.";
 
-      // Replace loading bubble with real answer
       setMessages((prev) =>
         prev.map((m) => (m.loading ? { role: "ai", text: answer } : m))
       );
@@ -107,11 +100,7 @@ export default function ChatPage() {
       setMessages((prev) =>
         prev.map((m) =>
           m.loading
-            ? {
-                role: "ai",
-                text: "⚠️ Something went wrong. Please check your connection and try again.",
-                error: true,
-              }
+            ? { role: "ai", text: `⚠️ ${err.message || "Something went wrong. Please try again."}`, error: true }
             : m
         )
       );
@@ -121,34 +110,26 @@ export default function ChatPage() {
     }
   };
 
-  // ── Send followup message ─────────────────────────────────────────────────
   const handleSend = () => {
     const text = inputText.trim();
     if (!text || isLoading) return;
-
     const userMsg = { role: "user", text };
     setMessages((prev) => [...prev, userMsg]);
     setInputText("");
-
-    // For followup questions, don't pass a topic — let the backend detect from question
     callAskAPI(text, null);
   };
 
   const handleKeyDown = (e) => {
-    if (e.key === "Enter" && !e.shiftKey) {
-      e.preventDefault();
-      handleSend();
-    }
+    if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); handleSend(); }
   };
 
-  // ── Render ────────────────────────────────────────────────────────────────
   return (
     <div className="min-h-screen bg-[#160d28] flex relative overflow-hidden">
       <Sidebar />
 
       <div className="flex-1 flex flex-col h-screen">
 
-        {/* ── Header ── */}
+        {/* Header */}
         <div className="flex items-center gap-4 px-6 py-4 bg-[#1e1038]/90 border-b border-[#c9922a]/40">
           <button
             onClick={() => navigate(-1)}
@@ -157,9 +138,7 @@ export default function ChatPage() {
             ←
           </button>
           <div className="flex items-center gap-3">
-            <span className="text-2xl">
-              {TOPIC_ICONS[topicLabel] || "✨"}
-            </span>
+            <span className="text-2xl">{TOPIC_ICONS[topicLabel] || "✨"}</span>
             <div>
               <h1 className="text-[#f0e6c8] font-medium text-base">
                 {topicLabel || "Astro"} Analysis
@@ -171,7 +150,7 @@ export default function ChatPage() {
           </div>
         </div>
 
-        {/* ── Messages ── */}
+        {/* Messages */}
         <div className="flex-1 overflow-y-auto px-4 py-6 space-y-4">
           {messages.map((msg, idx) => (
             <MessageBubble key={idx} msg={msg} />
@@ -179,17 +158,21 @@ export default function ChatPage() {
           <div ref={bottomRef} />
         </div>
 
-        {/* ── Input Bar ── */}
+        {/* Input Bar */}
         <div className="px-4 py-4 bg-[#1e1038]/90 border-t border-[#c9922a]/40">
-
-          {/* Suggested followup chips — shown only when AI last replied and not loading */}
-          {!isLoading && messages.length > 0 && messages[messages.length - 1].role === "ai" && !messages[messages.length - 1].loading && (
-            <FollowupChips topic={topic} topicLabel={topicLabel} onChipClick={(q) => {
-              const userMsg = { role: "user", text: q };
-              setMessages((prev) => [...prev, userMsg]);
-              callAskAPI(q, topic);
-            }} />
-          )}
+          {!isLoading &&
+            messages.length > 0 &&
+            messages[messages.length - 1].role === "ai" &&
+            !messages[messages.length - 1].loading && (
+              <FollowupChips
+                topic={topic}
+                onChipClick={(q) => {
+                  const userMsg = { role: "user", text: q };
+                  setMessages((prev) => [...prev, userMsg]);
+                  callAskAPI(q, topic);
+                }}
+              />
+            )}
 
           <div className="flex items-end gap-3 mt-2">
             <textarea
@@ -206,8 +189,7 @@ export default function ChatPage() {
                 text-[#f0e6c8] placeholder-[#8b7aa0]
                 rounded-2xl px-4 py-3 text-sm
                 focus:outline-none focus:border-[#c9922a]
-                transition-colors
-                disabled:opacity-50
+                transition-colors disabled:opacity-50
               "
               style={{ maxHeight: "120px" }}
               onInput={(e) => {
@@ -219,14 +201,10 @@ export default function ChatPage() {
               onClick={handleSend}
               disabled={isLoading || !inputText.trim()}
               className="
-                w-11 h-11 rounded-full
-                bg-[#c9922a] text-[#160d28]
-                flex items-center justify-center
-                font-bold text-lg
-                hover:bg-[#e8b84b]
-                transition-colors
-                disabled:opacity-40 disabled:cursor-not-allowed
-                flex-shrink-0
+                w-11 h-11 rounded-full bg-[#c9922a] text-[#160d28]
+                flex items-center justify-center font-bold text-lg
+                hover:bg-[#e8b84b] transition-colors
+                disabled:opacity-40 disabled:cursor-not-allowed flex-shrink-0
               "
             >
               ↑
@@ -243,17 +221,38 @@ export default function ChatPage() {
   );
 }
 
-// ── Message Bubble Component ─────────────────────────────────────────────────
+// ── Message Bubble ────────────────────────────────────────────────────────────
 
 function MessageBubble({ msg }) {
+  // Per-bubble translation state
+  const [hindiText, setHindiText] = useState(null);       // null = not translated yet
+  const [showHindi, setShowHindi] = useState(false);
+  const [translating, setTranslating] = useState(false);
+  const [transError, setTransError] = useState(false);
+
+  const handleTranslate = async () => {
+    // If already translated, just toggle
+    if (hindiText) { setShowHindi((v) => !v); return; }
+
+    setTranslating(true);
+    setTransError(false);
+    try {
+      const result = await translateToHindi(msg.text);
+      setHindiText(result);
+      setShowHindi(true);
+    } catch {
+      setTransError(true);
+    } finally {
+      setTranslating(false);
+    }
+  };
+
   if (msg.role === "user") {
     return (
       <div className="flex justify-end">
         <div className="
           max-w-[75%] bg-[#c9922a] text-[#160d28]
-          rounded-2xl rounded-tr-sm
-          px-4 py-3 text-sm font-medium
-          leading-relaxed
+          rounded-2xl rounded-tr-sm px-4 py-3 text-sm font-medium leading-relaxed
         ">
           {msg.text}
         </div>
@@ -262,6 +261,8 @@ function MessageBubble({ msg }) {
   }
 
   // AI bubble
+  const displayText = showHindi && hindiText ? hindiText : msg.text;
+
   return (
     <div className="flex justify-start gap-3">
       {/* Avatar */}
@@ -273,29 +274,85 @@ function MessageBubble({ msg }) {
         🔮
       </div>
 
-      <div className={`
-        max-w-[78%] bg-[#1e1038] border
-        rounded-2xl rounded-tl-sm
-        px-4 py-3 text-sm text-[#f0e6c8] leading-relaxed
-        ${msg.error ? "border-red-500/50" : "border-[#c9922a]/30"}
-      `}>
-        {msg.loading ? (
-          <LoadingDots />
-        ) : (
-          // Render line breaks from the LLM response
-          msg.text.split("\n").map((line, i) => (
-            <span key={i}>
-              {line}
-              {i < msg.text.split("\n").length - 1 && <br />}
-            </span>
-          ))
+      <div className="max-w-[78%] flex flex-col gap-2">
+
+        {/* Bubble */}
+        <div className={`
+          bg-[#1e1038] border rounded-2xl rounded-tl-sm
+          px-4 py-3 text-sm text-[#f0e6c8] leading-relaxed
+          ${msg.error ? "border-red-500/50" : "border-[#c9922a]/30"}
+        `}>
+          {msg.loading ? (
+            <LoadingDots />
+          ) : (
+            displayText.split("\n").map((line, i, arr) => (
+              <span key={i}>
+                {line}
+                {i < arr.length - 1 && <br />}
+              </span>
+            ))
+          )}
+        </div>
+
+        {/* Translate button — only shown on real AI replies, not loading/error bubbles */}
+        {!msg.loading && !msg.error && (
+          <div className="flex items-center gap-2 pl-1">
+            <button
+              onClick={handleTranslate}
+              disabled={translating}
+              className="
+                flex items-center gap-1.5
+                text-[11px] px-3 py-1
+                rounded-full border
+                transition-all duration-200
+                disabled:opacity-50 disabled:cursor-not-allowed
+                "
+              style={{
+                borderColor: showHindi ? "#c9922a" : "#c9922a55",
+                background: showHindi ? "#c9922a22" : "transparent",
+                color: showHindi ? "#e8b84b" : "#8b7aa0",
+              }}
+            >
+              {translating ? (
+                <>
+                  <span className="animate-spin inline-block">⟳</span>
+                  <span>अनुवाद हो रहा है…</span>
+                </>
+              ) : showHindi ? (
+                <>
+                  <span>🔤</span>
+                  <span>English</span>
+                </>
+              ) : (
+                <>
+                  <span>अ</span>
+                  <span>हिंदी में पढ़ें</span>
+                </>
+              )}
+            </button>
+
+            {/* Language indicator pill */}
+            {showHindi && hindiText && (
+              <span className="text-[10px] text-[#8b7aa0] bg-[#241443] px-2 py-0.5 rounded-full">
+                हिंदी
+              </span>
+            )}
+
+            {/* Translation error */}
+            {transError && (
+              <span className="text-[10px] text-red-400">
+                अनुवाद विफल। पुनः प्रयास करें।
+              </span>
+            )}
+          </div>
         )}
+
       </div>
     </div>
   );
 }
 
-// ── Loading Animation ────────────────────────────────────────────────────────
+// ── Loading Dots ──────────────────────────────────────────────────────────────
 
 function LoadingDots() {
   return (
@@ -304,10 +361,7 @@ function LoadingDots() {
         <div
           key={i}
           className="w-2 h-2 rounded-full bg-[#c9922a]"
-          style={{
-            animation: "bounce 1.2s infinite",
-            animationDelay: `${i * 0.2}s`,
-          }}
+          style={{ animation: "bounce 1.2s infinite", animationDelay: `${i * 0.2}s` }}
         />
       ))}
       <style>{`
@@ -320,7 +374,7 @@ function LoadingDots() {
   );
 }
 
-// ── Suggested Followup Chips ─────────────────────────────────────────────────
+// ── Followup Chips ────────────────────────────────────────────────────────────
 
 const FOLLOWUP_CHIPS = {
   relationship: [
@@ -350,7 +404,7 @@ const FOLLOWUP_CHIPS = {
   ],
 };
 
-function FollowupChips({ topic, topicLabel, onChipClick }) {
+function FollowupChips({ topic, onChipClick }) {
   const chips = FOLLOWUP_CHIPS[topic] || [];
   if (!chips.length) return null;
 

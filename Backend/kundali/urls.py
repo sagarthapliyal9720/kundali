@@ -12,6 +12,7 @@ from .views import (
     GenerateKundaliView,
     KundaliDetailView,
     KundaliListView,
+    TranslateView, 
 )
 
 urlpatterns = [
@@ -26,4 +27,7 @@ urlpatterns = [
 
     # Ask the LLM a question about a specific Kundali
     path("<int:pk>/ask/", AskKundaliView.as_view(),     name="kundali-ask"),
+    
+    path('translate/', TranslateView.as_view(), name='translate'),
+
 ]

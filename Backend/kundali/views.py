@@ -279,44 +279,6 @@ class AskKundaliView(APIView):
 # LLM caller — swap this for any provider (OpenAI, Anthropic, Gemini, etc.)
 # ---------------------------------------------------------------------------
 
-# def _call_llm(prompt: str) -> str:
-#     """
-#     Send the prompt to your LLM and return the text response.
-
-#     Currently wired to OpenAI (gpt-4o-mini) as an example.
-#     To switch:
-#       - Anthropic Claude : use anthropic.Anthropic().messages.create(...)
-#       - Google Gemini    : use google.generativeai.GenerativeModel(...)
-#       - Local Ollama     : call http://localhost:11434/api/generate
-
-#     Set OPENAI_API_KEY (or equivalent) in your .env / Django settings.
-    
-#     Google Gemini — free tier, perfect for testing."""
-    
-#     import google.generativeai as genai
-#     from django.conf import settings                                 # pip install openai
-
-#     genai.configure(api_key=settings.GEMINI_API_KEY)
-#     model    = genai.GenerativeModel("gemini-1.5-flash")
-#     response = model.generate_content(prompt)
-#     return response.text
-#     # response = client.chat.completions.create(
-#     #     messages=[
-#     #         {
-#     #             "role": "system",
-#     #             "content": (
-#     #                 "You are an expert Vedic astrologer with deep knowledge of "
-#     #                 "Jyotisha. Provide accurate, respectful, and helpful readings "
-#     #                 "based on the chart data provided. Always note that astrology "
-#     #                 "is a guidance tool, not a definitive prediction."
-#     #             ),
-#     #         },
-#     #         {"role": "user", "content": prompt},
-#     #     ],
-#     #     temperature=0.7,
-#     #     max_tokens=1000,
-#     # )
-#     # return response.choices[0].message.content.strip()
 
 def _call_llm(prompt: str) -> str:
     from google import genai
@@ -338,3 +300,82 @@ def _call_llm(prompt: str) -> str:
         if "404" in error_str:
             raise RuntimeError("Gemini model not found. Check model name in views.py.")
         raise
+    
+class TranslateView(APIView):
+    """
+    POST /api/translate/
+    Body: { "text": "English text here" }
+    Returns: { "translated": "Hindi text here" }
+ 
+    Reuses the same Gemini key already in settings.
+    No new package or API key needed.
+    """
+    permission_classes = [IsAuthenticated]
+ 
+    def post(self, request):
+        text = request.data.get("text", "").strip()
+ 
+        if not text:
+            return Response(
+                {"error": "text field is required."},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+ 
+        if len(text) > 8000:
+            return Response(
+                {"error": "Text too long to translate."},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+ 
+        try:
+            translated = _translate_to_hindi(text)
+            return Response({"translated": translated})
+        except Exception as exc:
+            logger.error("Translation failed: %s", exc)
+            return Response(
+                {"error": "Translation service is temporarily unavailable."},
+                status=status.HTTP_503_SERVICE_UNAVAILABLE,
+            )
+ 
+ 
+def _translate_to_hindi(text: str) -> str:
+    """
+    Translate English astrology text to simple, natural Hindi
+    using the same Gemini model used for chart readings.
+    """
+    import time
+    from google import genai
+    from django.conf import settings
+ 
+    prompt = f"""Translate the following Vedic astrology reading into simple, natural Hindi that anyone can understand.
+ 
+Rules:
+- Use simple everyday Hindi (not formal Sanskrit-heavy Hindi)
+- Keep all planet names, sign names, and house numbers in English (e.g. Sun, Moon, Mars, Leo, 7th house)
+- Keep proper nouns like "Navamsa", "Dasha", "Lagna", "Rahu", "Ketu" as-is
+- Do NOT add any extra explanation or commentary
+- Return ONLY the translated text, nothing else
+ 
+Text to translate:
+{text}"""
+ 
+    client = genai.Client(api_key=settings.GEMINI_API_KEY)
+ 
+    RETRIES = 3
+    WAITS = [3, 6, 12]
+ 
+    for attempt in range(RETRIES):
+        try:
+            response = client.models.generate_content(
+                model="gemini-2.5-flash",
+                contents=prompt,
+            )
+            return response.text.strip()
+        except Exception as e:
+            error_str = str(e)
+            is_overloaded = "503" in error_str or "UNAVAILABLE" in error_str
+            if is_overloaded and attempt < RETRIES - 1:
+                time.sleep(WAITS[attempt])
+                continue
+            raise
+ 
