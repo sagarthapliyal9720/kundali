@@ -17,12 +17,26 @@ export default function Dashboard() {
   const [kundlis, setKundlis] = useState([]);
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [panchangData, setPanchangData] = useState({});
   const navigate = useNavigate();
 
   useEffect(() => {
     fetchKundlis();
     fetchUserProfile();
+    fetchPanchang();
   }, []);
+
+  // Fetch Panchang
+  const fetchPanchang = async () => {
+    try {
+      const response = await axios.get(
+        "http://localhost:8000/accounts/daily-panchang/"
+      );
+      setPanchangData(response.data);
+    } catch (error) {
+      console.log("Failed to fetch panchang:", error);
+    }
+  };
 
   // Fetch User Profile
   const fetchUserProfile = async () => {
@@ -72,7 +86,6 @@ export default function Dashboard() {
           },
         }
       );
-
       setKundlis(kundlis.filter((item) => item.id !== id));
     } catch (error) {
       console.log(error);
@@ -102,7 +115,7 @@ export default function Dashboard() {
           </div>
 
           {/* Profile Image */}
-          <div 
+          <div
             className="w-14 h-14 rounded-full overflow-hidden border-2 border-[#c9922a] cursor-pointer hover:border-white transition"
             onClick={() => navigate("/profile")}
           >
@@ -192,7 +205,7 @@ export default function Dashboard() {
 
                         <div className="flex gap-3">
                           <button
-                            onClick={() => navigate(`/kundli/${item.id}`)}
+                            onClick={() => navigate(`/view-kundli/${item.id}`)}
                             className="bg-[#c9922a] hover:bg-[#e0aa3e] text-[#160d28] px-5 py-2 rounded-xl font-bold transition"
                           >
                             View
@@ -230,6 +243,8 @@ export default function Dashboard() {
 
           {/* RIGHT SIDE */}
           <div className="lg:col-span-4 space-y-6">
+
+            {/* TODAY'S ENERGY — now shows sunrise & sunset */}
             <div className="bg-[#1e1038]/90 border border-[#c9922a] rounded-3xl shadow-xl p-6">
               <div className="flex items-center justify-between mb-5">
                 <h2 className="text-2xl font-bold text-[#f0e6c8]">Today's Energy</h2>
@@ -237,30 +252,48 @@ export default function Dashboard() {
               </div>
               <div className="space-y-4">
                 <div className="bg-[#140b27] border border-[#5b4779] rounded-2xl p-4">
-                  <p className="text-[#8b7aa0] text-sm mb-1">Total Reports</p>
-                  <h3 className="text-[#f0e6c8] font-bold text-2xl">{kundlis.length}</h3>
+                  <p className="text-[#8b7aa0] text-sm mb-1">🌅 Sunrise</p>
+                  <h3 className="text-[#f0e6c8] font-bold text-2xl">
+                    {panchangData?.sunrise || "--"}
+                  </h3>
                 </div>
                 <div className="bg-[#140b27] border border-[#5b4779] rounded-2xl p-4">
-                  <p className="text-[#8b7aa0] text-sm mb-1">Last Generated</p>
-                  <h3 className="text-[#f0e6c8] font-bold text-lg truncate">
-                    {kundlis.length > 0 ? kundlis[0].full_name : "--"}
+                  <p className="text-[#8b7aa0] text-sm mb-1">🌇 Sunset</p>
+                  <h3 className="text-[#f0e6c8] font-bold text-2xl">
+                    {panchangData?.sunset || "--"}
                   </h3>
                 </div>
               </div>
             </div>
 
+            {/* TODAY'S TITHI — replaces Cosmic Insight */}
             <div className="bg-[#1e1038]/90 border border-pink-500 rounded-3xl shadow-xl p-6">
               <div className="flex items-center justify-between mb-5">
-                <h2 className="text-2xl font-bold text-pink-400">Cosmic Insight</h2>
+                <h2 className="text-2xl font-bold text-pink-400">Today's Tithi</h2>
                 <span className="text-4xl">🔮</span>
               </div>
-              <p className="text-[#f0e6c8] leading-8 text-lg">
-                “The stars incline us, they do not bind us.”
-              </p>
-              <p className="text-[#8b7aa0] mt-5 text-sm">
-                Trust your intuition and move forward with confidence.
-              </p>
+              <div className="space-y-4">
+                <div className="bg-[#140b27] border border-[#5b4779] rounded-2xl p-4">
+                  <p className="text-[#8b7aa0] text-sm mb-1">📿 Tithi</p>
+                  <h3 className="text-[#f0e6c8] font-bold text-lg">
+                    {panchangData?.tithi?.tithi_name || "--"}
+                  </h3>
+                </div>
+                <div className="bg-[#140b27] border border-[#5b4779] rounded-2xl p-4">
+                  <p className="text-[#8b7aa0] text-sm mb-1">🌗 Paksha</p>
+                  <h3 className="text-[#f0e6c8] font-bold text-lg">
+                    {panchangData?.tithi?.paksha || "--"}
+                  </h3>
+                </div>
+                <div className="bg-[#140b27] border border-[#5b4779] rounded-2xl p-4">
+                  <p className="text-[#8b7aa0] text-sm mb-1">🔢 Tithi Number</p>
+                  <h3 className="text-[#f0e6c8] font-bold text-lg">
+                    {panchangData?.tithi?.tithi_number || "--"}
+                  </h3>
+                </div>
+              </div>
             </div>
+
           </div>
         </div>
       </div>

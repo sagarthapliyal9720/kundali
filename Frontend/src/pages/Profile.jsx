@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import { User, Mail, Phone, Calendar, MapPin, FileText, Upload } from "lucide-react";
+import { User, Mail, Phone, Calendar, MapPin, FileText, Upload, ArrowLeft } from "lucide-react";
 
 export default function UpdateProfile() {
   const [formData, setFormData] = useState({
@@ -91,6 +91,16 @@ export default function UpdateProfile() {
   return (
     <div className="min-h-screen bg-[#160d28] p-6">
       <div className="max-w-2xl mx-auto">
+
+        {/* BACK BUTTON */}
+        <button
+          onClick={() => navigate(-1)}
+          className="flex items-center gap-2 text-[#f0e6c8] hover:text-[#c9922a] transition mb-6"
+        >
+          <ArrowLeft size={20} />
+          <span className="font-semibold">Back</span>
+        </button>
+
         <div className="bg-[#1e1038]/90 border border-[#c9922a] rounded-3xl p-8 shadow-xl">
           <h1 className="text-3xl font-bold text-[#f0e6c8] text-center mb-8">
             Update Profile

@@ -81,6 +81,7 @@ export default function Login() {
                 value={formData.email}
                 onChange={handleChange}
                 className="w-full px-4 py-3 outline-none bg-transparent text-[#f0e6c8] placeholder-[#7f7196]"
+                
                 required
               />
             </div>

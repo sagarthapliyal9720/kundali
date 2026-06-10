@@ -13,6 +13,7 @@ import VerifyOTP from "./pages/VerifyOTP";
 import VerifyRegisterOTP from "./pages/VerifyRegisterOTP";
 import ChatPage from "./pages/ChatPage";
 
+import ViewKundli from "./pages/ViewKundli";
 
 function App() {
   return (
@@ -23,6 +24,7 @@ function App() {
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/Kundli" element={<Kundli />} />
         <Route path="/daily-horoscope" element={<DailyHoroscope />} />
+        <Route path="/view-kundli/:id" element={<ViewKundli />} />
         <Route path="/birthchart" element={<Birthchart />} />
         <Route path="/profile" element={<Profile />} />
         <Route path="/update-profile" element={<UpdateProfile />} />
