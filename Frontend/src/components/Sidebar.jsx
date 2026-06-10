@@ -71,10 +71,10 @@ export default function Sidebar() {
               Horoscope
             </button>
 
-            <button className="flex items-center gap-3 w-full px-4 py-3 rounded-2xl hover:bg-[#2d1b4e] transition">
+            {/* <button className="flex items-center gap-3 w-full px-4 py-3 rounded-2xl hover:bg-[#2d1b4e] transition">
               <FileText size={22} />
               Reports
-            </button>
+            </button> */}
 
             <button className="flex items-center gap-3 w-full px-4 py-3 rounded-2xl hover:bg-[#2d1b4e] transition">
               <Settings size={22} />
