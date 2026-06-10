@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import Sidebar from "../components/Sidebar";
 
 export default function DailyHoroscope() {
   // Panchang State
@@ -76,14 +77,22 @@ export default function DailyHoroscope() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-[#160d28] p-6 relative overflow-hidden">
+    <div className="min-h-screen bg-[#160d28] flex relative overflow-hidden">
+
+      <Sidebar/>
+
+      <div className="flex-1 p-6 relative overflow-hidden">
+
+      
       {/* Background Glow */}
       <div className="absolute w-[500px] h-[500px] bg-[#3a1c71] opacity-20 blur-3xl rounded-full top-[-120px] left-[-120px]"></div>
 
       <div className="absolute w-[400px] h-[400px] bg-[#c9922a] opacity-10 blur-3xl rounded-full bottom-[-100px] right-[-100px]"></div>
+      
+      <div className="relative z-10">
 
       {/* Header */}
-      <div className="relative z-10 mb-10 flex flex-col md:flex-row md:items-center md:justify-between">
+      <div className="mb-10 flex flex-col md:flex-row md:items-center md:justify-between">
         <div>
           <h1 className="text-4xl font-bold text-[#f0e6c8] mb-2">
             Daily Horoscope & Panchang
@@ -114,7 +123,7 @@ export default function DailyHoroscope() {
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 relative z-10">
         {/* LEFT PANEL */}
         <div className="lg:col-span-4">
-          <div className="bg-[#1e1038]/90 border border-[#c9922a] rounded-3xl shadow-2xl p-6 sticky top-6">
+          <div className="bg-[#1e1038]/90 border border-[#c9922a] rounded-3xl shadow-2xl p-6">
             {/* Title */}
             <div className="mb-6">
               <h2 className="text-3xl font-bold text-[#f0e6c8] mb-2">
@@ -299,6 +308,8 @@ export default function DailyHoroscope() {
             </div>
           </div>
         </div>
+      </div>
+      </div>
       </div>
     </div>
   );
