@@ -33,28 +33,29 @@ export default function Sidebar() {
       </button>
 
       {/* SIDEBAR */}
-      <div
-        className={`
-          fixed md:sticky
-          top-0 left-0
-          min-h-screen
-          w-72
-          bg-[#1e1038]/95
-          border-r border-[#c9922a]
-          text-[#f0e6c8]
-          pt-16 pb-6 px-6
-          flex flex-col
-          z-50
-          transform
-          transition-transform
-          duration-300
-          ${
-            mobileOpen
-              ? "translate-x-0"
-              : "-translate-x-full md:translate-x-0"
-          }
-        `}
-      >
+      {/* SIDEBAR */}
+<div
+  className={`
+    fixed
+    top-0 left-0
+    h-screen
+    w-72
+    bg-[#1e1038]/95
+    border-r border-[#c9922a]
+    text-[#f0e6c8]
+    pt-16 md:pt-6 pb-6 px-6
+    flex flex-col
+    z-50
+    transform
+    transition-transform
+    duration-300
+    ${
+      mobileOpen
+        ? "translate-x-0"
+        : "-translate-x-full md:translate-x-0"
+    }
+  `}
+>
         <div>
           {/* MOBILE CLOSE BUTTON */}
           <button

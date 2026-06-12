@@ -90,12 +90,11 @@ export default function Birthchart() {
   };
 
   return (
-    <div className="min-h-screen bg-[#160d28] flex relative overflow-hidden">
+    <div className="min-h-screen bg-[#160d28] relative overflow-hidden">
 
       <Sidebar />
 
-      <div className="flex-1 flex justify-center items-center p-6 relative z-10">
-
+      <div className="md:ml-72 pt-20 md:pt-6 px-6 pb-6 relative z-10">
         <div className="flex flex-col items-center gap-6">
         {/* Heading */}
         <div className="bg-[#1e1038]/90 border border-[#c9922a] rounded-3xl p-8 text-center">

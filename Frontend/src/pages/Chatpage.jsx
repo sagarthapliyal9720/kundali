@@ -124,101 +124,101 @@ export default function ChatPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#160d28] flex relative overflow-hidden">
-      <Sidebar />
+  <div className="h-screen bg-[#160d28] relative overflow-hidden flex">
+    <Sidebar />
 
-      <div className="flex-1 flex flex-col h-screen">
+    <div className="md:ml-72 flex-1 flex flex-col relative z-10 h-screen">
 
-        {/* Header */}
-        <div className="flex items-center gap-4 px-6 py-4 bg-[#1e1038]/90 border-b border-[#c9922a]/40">
-          <button
-            onClick={() => navigate(-1)}
-            className="text-[#c9922a] hover:text-[#e8b84b] transition-colors text-xl"
-          >
-            ←
-          </button>
-          <div className="flex items-center gap-3">
-            <span className="text-2xl">{TOPIC_ICONS[topicLabel] || "✨"}</span>
-            <div>
-              <h1 className="text-[#f0e6c8] font-medium text-base">
-                {topicLabel || "Astro"} Analysis
-              </h1>
-              <p className="text-[#8b7aa0] text-xs">
-                Based on your D1 Kundali · Vedic Astrology
-              </p>
-            </div>
+      {/* Header */}
+      <div className="flex items-center gap-4 px-6 py-4 pt-20 md:pt-4 bg-[#1e1038]/90 border-b border-[#c9922a]/40 flex-shrink-0">
+        <button
+          onClick={() => navigate(-1)}
+          className="text-[#c9922a] hover:text-[#e8b84b] transition-colors text-xl"
+        >
+          ←
+        </button>
+        <div className="flex items-center gap-3">
+          <span className="text-2xl">{TOPIC_ICONS[topicLabel] || "✨"}</span>
+          <div>
+            <h1 className="text-[#f0e6c8] font-medium text-base">
+              {topicLabel || "Astro"} Analysis
+            </h1>
+            <p className="text-[#8b7aa0] text-xs">
+              Based on your D1 Kundali · Vedic Astrology
+            </p>
           </div>
         </div>
+      </div>
 
-        {/* Messages */}
-        <div className="flex-1 overflow-y-auto px-4 py-6 space-y-4">
-          {messages.map((msg, idx) => (
-            <MessageBubble key={idx} msg={msg} />
-          ))}
-          <div ref={bottomRef} />
-        </div>
+      {/* Messages */}
+      <div className="flex-1 overflow-y-auto px-4 py-6 space-y-4">
+        {messages.map((msg, idx) => (
+          <MessageBubble key={idx} msg={msg} />
+        ))}
+        <div ref={bottomRef} />
+      </div>
 
-        {/* Input Bar */}
-        <div className="px-4 py-4 bg-[#1e1038]/90 border-t border-[#c9922a]/40">
-          {!isLoading &&
-            messages.length > 0 &&
-            messages[messages.length - 1].role === "ai" &&
-            !messages[messages.length - 1].loading && (
-              <FollowupChips
-                topic={topic}
-                onChipClick={(q) => {
-                  const userMsg = { role: "user", text: q };
-                  setMessages((prev) => [...prev, userMsg]);
-                  callAskAPI(q, topic);
-                }}
-              />
-            )}
-
-          <div className="flex items-end gap-3 mt-2">
-            <textarea
-              ref={inputRef}
-              rows={1}
-              value={inputText}
-              onChange={(e) => setInputText(e.target.value)}
-              onKeyDown={handleKeyDown}
-              placeholder="Ask a followup question…"
-              disabled={isLoading}
-              className="
-                flex-1 resize-none
-                bg-[#241443] border border-[#c9922a]/50
-                text-[#f0e6c8] placeholder-[#8b7aa0]
-                rounded-2xl px-4 py-3 text-sm
-                focus:outline-none focus:border-[#c9922a]
-                transition-colors disabled:opacity-50
-              "
-              style={{ maxHeight: "120px" }}
-              onInput={(e) => {
-                e.target.style.height = "auto";
-                e.target.style.height = e.target.scrollHeight + "px";
+      {/* Input Bar */}
+      <div className="px-4 py-4 bg-[#1e1038]/90 border-t border-[#c9922a]/40 flex-shrink-0">
+        {!isLoading &&
+          messages.length > 0 &&
+          messages[messages.length - 1].role === "ai" &&
+          !messages[messages.length - 1].loading && (
+            <FollowupChips
+              topic={topic}
+              onChipClick={(q) => {
+                const userMsg = { role: "user", text: q };
+                setMessages((prev) => [...prev, userMsg]);
+                callAskAPI(q, topic);
               }}
             />
-            <button
-              onClick={handleSend}
-              disabled={isLoading || !inputText.trim()}
-              className="
-                w-11 h-11 rounded-full bg-[#c9922a] text-[#160d28]
-                flex items-center justify-center font-bold text-lg
-                hover:bg-[#e8b84b] transition-colors
-                disabled:opacity-40 disabled:cursor-not-allowed flex-shrink-0
-              "
-            >
-              ↑
-            </button>
-          </div>
+          )}
 
-          <p className="text-center text-[#8b7aa0] text-[10px] mt-2">
-            Astrology is a guidance tool. All readings are based on Vedic principles.
-          </p>
+        <div className="flex items-end gap-3 mt-2">
+          <textarea
+            ref={inputRef}
+            rows={1}
+            value={inputText}
+            onChange={(e) => setInputText(e.target.value)}
+            onKeyDown={handleKeyDown}
+            placeholder="Ask a followup question…"
+            disabled={isLoading}
+            className="
+              flex-1 resize-none
+              bg-[#241443] border border-[#c9922a]/50
+              text-[#f0e6c8] placeholder-[#8b7aa0]
+              rounded-2xl px-4 py-3 text-sm
+              focus:outline-none focus:border-[#c9922a]
+              transition-colors disabled:opacity-50
+            "
+            style={{ maxHeight: "120px" }}
+            onInput={(e) => {
+              e.target.style.height = "auto";
+              e.target.style.height = e.target.scrollHeight + "px";
+            }}
+          />
+          <button
+            onClick={handleSend}
+            disabled={isLoading || !inputText.trim()}
+            className="
+              w-11 h-11 rounded-full bg-[#c9922a] text-[#160d28]
+              flex items-center justify-center font-bold text-lg
+              hover:bg-[#e8b84b] transition-colors
+              disabled:opacity-40 disabled:cursor-not-allowed flex-shrink-0
+            "
+          >
+            ↑
+          </button>
         </div>
 
+        <p className="text-center text-[#8b7aa0] text-[10px] mt-2">
+          Astrology is a guidance tool. All readings are based on Vedic principles.
+        </p>
       </div>
+
     </div>
-  );
+  </div>
+);
 }
 
 // ── Message Bubble ────────────────────────────────────────────────────────────

@@ -93,7 +93,7 @@ export default function Dashboard() {
   };
 
   return (
-    <div className="min-h-screen bg-[#160d28] flex relative overflow-hidden">
+    <div className="min-h-screen bg-[#160d28] relative overflow-hidden">
       {/* Background Glow */}
       <div className="absolute w-[500px] h-[500px] bg-[#3a1c71] opacity-20 blur-3xl rounded-full top-[-120px] left-[-120px]"></div>
       <div className="absolute w-[400px] h-[400px] bg-[#c9922a] opacity-10 blur-3xl rounded-full bottom-[-100px] right-[-100px]"></div>
@@ -102,7 +102,7 @@ export default function Dashboard() {
       <Sidebar />
 
       {/* Main Content */}
-      <div className="flex-1 p-6 relative z-10 overflow-y-auto">
+      <div className="md:ml-72 pt-20 md:pt-6 px-6 pb-6 relative z-10">
         {/* Topbar */}
         <div className="bg-[#1e1038]/90 border border-[#c9922a] rounded-3xl shadow-xl p-6 flex items-center justify-between mb-6">
           <div>

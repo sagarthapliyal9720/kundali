@@ -60,13 +60,13 @@ export default function Kundli() {
   };
 
   return (
-    <div className="min-h-screen bg-[#160d28] flex relative overflow-hidden">
+   <div className="min-h-screen bg-[#160d28] relative overflow-hidden">
 
       {/* Sidebar */}
       <Sidebar />
 
       {/* Main Content */}
-      <div className="flex-1 p-6 relative ">
+      <div className="md:ml-72 pt-20 md:pt-6 px-6 pb-6 relative z-10">
 
         {/* Background Glow */}
         <div className="absolute w-[500px] h-[500px] bg-[#3a1c71] opacity-20 blur-3xl rounded-full top-[-120px] left-[-120px]"></div>

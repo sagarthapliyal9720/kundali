@@ -119,7 +119,7 @@ export default function EditProfile() {
 
       <Sidebar />
 
-      <div className="flex-1 p-6 relative z-10">
+      <div className="md:ml-72 pt-20 md:pt-6 px-6 pb-6 relative z-10">
         <form
           onSubmit={handleSubmit}
           className="max-w-5xl mx-auto bg-[#1e1038]/90 border border-[#c9922a] rounded-3xl shadow-xl p-8"

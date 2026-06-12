@@ -77,11 +77,11 @@ export default function DailyHoroscope() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-[#160d28] flex relative overflow-hidden">
+    <div className="min-h-screen bg-[#160d28] relative overflow-hidden">
 
       <Sidebar/>
 
-      <div className="flex-1 p-6 relative overflow-hidden">
+      <div className="md:ml-72 pt-20 md:pt-6 px-6 pb-6 relative z-10">
 
       
       {/* Background Glow */}
