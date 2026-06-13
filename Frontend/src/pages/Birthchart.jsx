@@ -94,7 +94,7 @@ export default function Birthchart() {
 
       <Sidebar />
 
-      <div className="md:ml-72 pt-20 md:pt-6 px-6 pb-6 relative z-10">
+      <div className="md:ml-72 pt-20  md:pt-6 px-6 pb-6 relative z-10">
         <div className="flex flex-col items-center gap-6">
         {/* Heading */}
         <div className="bg-[#1e1038]/90 border border-[#c9922a] rounded-3xl p-8 text-center">

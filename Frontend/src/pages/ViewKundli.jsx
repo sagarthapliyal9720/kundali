@@ -56,7 +56,7 @@ export default function ViewKundli() {
     <div className="min-h-screen bg-[#160d28] relative overflow-hidden">
       <Sidebar />
 
-      <div className="md:ml-72 pt-20 md:pt-6 px-6 pb-6 relative z-10">
+      <div className="md:ml-72 pt-20 ml-20 md:pt-6 px-6 pb-6 relative z-10">
 
         {/* Header */}
         <div className="bg-[#1e1038]/90 border border-[#c9922a] rounded-3xl p-8 mb-8">

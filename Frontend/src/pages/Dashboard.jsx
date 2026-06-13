@@ -102,7 +102,7 @@ export default function Dashboard() {
       <Sidebar />
 
       {/* Main Content */}
-      <div className="md:ml-72 pt-20 md:pt-6 px-6 pb-6 relative z-10">
+      <div className="md:ml-72 pt-20 ml-14 md:pt-6 px-6 pb-6 relative z-10">
         {/* Topbar */}
         <div className="bg-[#1e1038]/90 border border-[#c9922a] rounded-3xl shadow-xl p-6 flex items-center justify-between mb-6">
           <div>

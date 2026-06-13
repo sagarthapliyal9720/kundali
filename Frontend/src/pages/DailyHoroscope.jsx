@@ -81,7 +81,7 @@ export default function DailyHoroscope() {
 
       <Sidebar/>
 
-      <div className="md:ml-72 pt-20 md:pt-6 px-6 pb-6 relative z-10">
+      <div className="md:ml-72 pt-20 ml-20 md:pt-6 px-6 pb-6 relative z-10">
 
       
       {/* Background Glow */}

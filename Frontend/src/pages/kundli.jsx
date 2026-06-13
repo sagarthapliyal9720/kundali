@@ -66,7 +66,7 @@ export default function Kundli() {
       <Sidebar />
 
       {/* Main Content */}
-      <div className="md:ml-72 pt-20 md:pt-6 px-6 pb-6 relative z-10">
+      <div className="md:ml-72 pt-20 ml-20 md:pt-6 px-6 pb-6 relative z-10">
 
         {/* Background Glow */}
         <div className="absolute w-[500px] h-[500px] bg-[#3a1c71] opacity-20 blur-3xl rounded-full top-[-120px] left-[-120px]"></div>
