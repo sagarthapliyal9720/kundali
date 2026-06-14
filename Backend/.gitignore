@@ -62,7 +62,7 @@ share/python-wheels/
 MANIFEST
 
 # Django migrations (optional - only ignore if you want)
-migrations/
+# migrations/
 
 # Logs
 logs/

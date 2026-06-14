@@ -44,17 +44,25 @@ class SendRegisterOTPView(APIView):
         print("SESSION OTP =", request.session.get("register_otp"))
         print("SESSION KEY =", request.session.session_key)
 
-        send_mail(
-            "Email Verification OTP",
-            f"Your OTP is: {otp}",
-            settings.DEFAULT_FROM_EMAIL,
-            [email],
-            fail_silently=False
-        )
+        try:
+            send_mail(
+                "Email Verification OTP",
+                f"Your OTP is: {otp}",
+                settings.DEFAULT_FROM_EMAIL,
+                [email],
+                fail_silently=False
+    )
+
+            return Response({
+        "message": "OTP Sent"
+    })
+
+        except Exception as e:
+            print("EMAIL ERROR:", str(e))
 
         return Response({
-            "message": "OTP Sent"
-        })
+        "error": str(e)
+    }, status=500)
     
 class VerifyRegisterOTPView(APIView):
 
