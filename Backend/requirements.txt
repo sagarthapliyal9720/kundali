@@ -13,3 +13,4 @@ geopy
 astral
 djangorestframework
 google-genai
+python-decouple
