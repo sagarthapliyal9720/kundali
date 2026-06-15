@@ -145,21 +145,22 @@ CORS_ALLOW_CREDENTIALS = True
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:5173",
 
-    # Render frontend URL yaha add karna
-    # "https://yourfrontend.onrender.com",
+    
+    "https://kundali-hil6.vercel.app",
 ]
 
 CSRF_TRUSTED_ORIGINS = [
     "http://localhost:5173",
 
-    # Render frontend URL yaha add karna
-    # "https://yourfrontend.onrender.com",
+    "https://kundali-hil6.vercel.app",
 ]
 
 
-SESSION_COOKIE_SAMESITE = "Lax"
-SESSION_COOKIE_SECURE = False
-CSRF_COOKIE_SECURE = False
+SESSION_COOKIE_SAMESITE = "None"
+SESSION_COOKIE_SECURE = True
+
+CSRF_COOKIE_SAMESITE = "None"
+CSRF_COOKIE_SECURE = True
 
 
 # SWISSEPH
@@ -170,7 +171,7 @@ SWISSEPH_PATH = BASE_DIR / "swisseph"
 EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
 
 EMAIL_HOST = "smtp-relay.brevo.com"
-EMAIL_PORT = 587
+EMAIL_PORT = 2525
 EMAIL_USE_TLS = True
 
 EMAIL_HOST_USER = "ad2955001@smtp-brevo.com"
@@ -178,6 +179,9 @@ EMAIL_HOST_PASSWORD = config("EMAIL_HOST_PASSWORD")
 
 
 DEFAULT_FROM_EMAIL = "ghildiyalmanish6397@gmail.com"
+
+
+EMAIL_TIMEOUT = 60
 
 
 # GEMINI
