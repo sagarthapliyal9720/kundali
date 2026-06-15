@@ -280,32 +280,56 @@ class AskKundaliView(APIView):
 # ---------------------------------------------------------------------------
 
 
+import time
 from google import genai
 from django.conf import settings
-import traceback
 
-client = genai.Client(
-    api_key=settings.GEMINI_API_KEY
-)
 
 def _call_llm(prompt):
-    try:
-        print("CALLING GEMINI")
-        print("PROMPT LENGTH =", len(prompt))
 
-        response = client.models.generate_content(
-            model="gemini-2.5-flash",
-            contents=prompt,
-        )
+    client = genai.Client(
+        api_key=settings.GEMINI_API_KEY
+    )
 
-        print("GEMINI RESPONSE RECEIVED")
+    models = [
+        "gemini-2.5-flash",
+        "gemini-2.0-flash",
+    ]
 
-        return response.text
+    for model_name in models:
 
-    except Exception as e:
-        print("GEMINI ERROR =", str(e))
-        traceback.print_exc()
-        raise
+        for attempt in range(3):
+
+            try:
+
+                response = client.models.generate_content(
+                    model=model_name,
+                    contents=prompt,
+                )
+
+                return response.text
+
+            except Exception as e:
+
+                error = str(e)
+
+                if "503" in error or "UNAVAILABLE" in error:
+
+                    wait_time = 2 ** attempt
+
+                    print(
+                        f"{model_name} overloaded. Retrying in {wait_time}s..."
+                    )
+
+                    time.sleep(wait_time)
+
+                    continue
+
+                raise
+
+    raise Exception(
+        "All Gemini models unavailable"
+    )
     
 class TranslateView(APIView):
     """
