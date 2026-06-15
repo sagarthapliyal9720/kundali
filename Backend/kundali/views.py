@@ -280,43 +280,31 @@ class AskKundaliView(APIView):
 # ---------------------------------------------------------------------------
 
 
-def _call_llm(prompt: str) -> str:
+from google import genai
+from django.conf import settings
+import traceback
 
-    
-    
-    from django.conf import settings
+client = genai.Client(
+    api_key=settings.GEMINI_API_KEY
+)
 
-    import httpx
-    from google import genai
-
-    print("CALLING GEMINI")
-
-    http_client = httpx.Client(
-        timeout=20.0
-    )
-
-    client = genai.Client(
-        api_key=settings.GEMINI_API_KEY,
-        http_options={
-            "client": http_client
-        }
-    )
-
+def _call_llm(prompt):
     try:
-        response = client.models.generate_content(
-            model="gemini-2.5-flash",   # current free tier model
-            contents=prompt,
+        print("CALLING GEMINI")
+        print("PROMPT LENGTH =", len(prompt))
 
+        response = client.models.generate_content(
+            model="gemini-2.5-flash",
+            contents=prompt,
         )
+
         print("GEMINI RESPONSE RECEIVED")
+
         return response.text
 
     except Exception as e:
-        error_str = str(e)
-        if "429" in error_str or "quota" in error_str.lower():
-            raise RuntimeError("API quota exceeded. Please try again in a few minutes.")
-        if "404" in error_str:
-            raise RuntimeError("Gemini model not found. Check model name in views.py.")
+        print("GEMINI ERROR =", str(e))
+        traceback.print_exc()
         raise
     
 class TranslateView(APIView):
