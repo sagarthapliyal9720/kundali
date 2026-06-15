@@ -280,56 +280,65 @@ class AskKundaliView(APIView):
 # ---------------------------------------------------------------------------
 
 
-import time
-from google import genai
-from django.conf import settings
+# from google import genai
+# from django.conf import settings
+# import traceback
 
+# client = genai.Client(
+#     api_key=settings.GEMINI_API_KEY
+# )
 
-def _call_llm(prompt):
+# def _call_llm(prompt):
+#     try:
+#         print("CALLING GEMINI")
+#         print("PROMPT LENGTH =", len(prompt))
 
-    client = genai.Client(
-        api_key=settings.GEMINI_API_KEY
+#         response = client.models.generate_content(
+#             model="gemini-2.5-flash",
+#             contents=prompt,
+#         )
+
+#         print("GEMINI RESPONSE RECEIVED")
+
+#         return response.text
+
+#     except Exception as e:
+#         print("GEMINI ERROR =", str(e))
+#         traceback.print_exc()
+#         raise
+
+def _call_llm(prompt: str) -> str:
+    from groq import Groq
+    from django.conf import settings
+
+    client = Groq(
+        api_key=settings.GROQ_API_KEY
     )
 
-    models = [
-        "gemini-2.5-flash",
-        "gemini-2.0-flash",
-    ]
+    try:
+        response = client.chat.completions.create(
+            model="llama-3.3-70b-versatile",
+            messages=[
+                {
+                    "role": "user",
+                    "content": prompt
+                }
+            ],
+            temperature=0.7,
+            max_tokens=2000
+        )
 
-    for model_name in models:
+        return response.choices[0].message.content
 
-        for attempt in range(3):
+    except Exception as e:
+        error_str = str(e)
 
-            try:
+        if "rate_limit" in error_str.lower():
+            raise RuntimeError(
+                "API rate limit exceeded. Please try again later."
+            )
 
-                response = client.models.generate_content(
-                    model=model_name,
-                    contents=prompt,
-                )
-
-                return response.text
-
-            except Exception as e:
-
-                error = str(e)
-
-                if "503" in error or "UNAVAILABLE" in error:
-
-                    wait_time = 2 ** attempt
-
-                    print(
-                        f"{model_name} overloaded. Retrying in {wait_time}s..."
-                    )
-
-                    time.sleep(wait_time)
-
-                    continue
-
-                raise
-
-    raise Exception(
-        "All Gemini models unavailable"
-    )
+        raise
     
 class TranslateView(APIView):
     """
@@ -368,44 +377,79 @@ class TranslateView(APIView):
             )
  
  
+# def _translate_to_hindi(text: str) -> str:
+#     """
+#     Translate English astrology text to simple, natural Hindi
+#     using the same Gemini model used for chart readings.
+#     """
+#     import time
+#     from google import genai
+#     from django.conf import settings
+ 
+#     prompt = f"""Translate the following Vedic astrology reading into simple, natural Hindi that anyone can understand.
+ 
+# Rules:
+# - Use simple everyday Hindi (not formal Sanskrit-heavy Hindi)
+# - Keep all planet names, sign names, and house numbers in English (e.g. Sun, Moon, Mars, Leo, 7th house)
+# - Keep proper nouns like "Navamsa", "Dasha", "Lagna", "Rahu", "Ketu" as-is
+# - Do NOT add any extra explanation or commentary
+# - Return ONLY the translated text, nothing else
+ 
+# Text to translate:
+# {text}"""
+ 
+#     client = genai.Client(api_key=settings.GEMINI_API_KEY)
+ 
+#     RETRIES = 3
+#     WAITS = [3, 6, 12]
+ 
+#     for attempt in range(RETRIES):
+#         try:
+#             response = client.models.generate_content(
+#                 model="gemini-2.5-flash",
+#                 contents=prompt,
+#             )
+#             return response.text.strip()
+#         except Exception as e:
+#             error_str = str(e)
+#             is_overloaded = "503" in error_str or "UNAVAILABLE" in error_str
+#             if is_overloaded and attempt < RETRIES - 1:
+#                 time.sleep(WAITS[attempt])
+#                 continue
+#             raise
+ 
 def _translate_to_hindi(text: str) -> str:
-    """
-    Translate English astrology text to simple, natural Hindi
-    using the same Gemini model used for chart readings.
-    """
-    import time
-    from google import genai
+    from groq import Groq
     from django.conf import settings
- 
-    prompt = f"""Translate the following Vedic astrology reading into simple, natural Hindi that anyone can understand.
- 
+
+    prompt = f"""
+Translate the following Vedic astrology reading into simple, natural Hindi.
+
 Rules:
-- Use simple everyday Hindi (not formal Sanskrit-heavy Hindi)
-- Keep all planet names, sign names, and house numbers in English (e.g. Sun, Moon, Mars, Leo, 7th house)
-- Keep proper nouns like "Navamsa", "Dasha", "Lagna", "Rahu", "Ketu" as-is
-- Do NOT add any extra explanation or commentary
-- Return ONLY the translated text, nothing else
- 
-Text to translate:
-{text}"""
- 
-    client = genai.Client(api_key=settings.GEMINI_API_KEY)
- 
-    RETRIES = 3
-    WAITS = [3, 6, 12]
- 
-    for attempt in range(RETRIES):
-        try:
-            response = client.models.generate_content(
-                model="gemini-2.5-flash",
-                contents=prompt,
-            )
-            return response.text.strip()
-        except Exception as e:
-            error_str = str(e)
-            is_overloaded = "503" in error_str or "UNAVAILABLE" in error_str
-            if is_overloaded and attempt < RETRIES - 1:
-                time.sleep(WAITS[attempt])
-                continue
-            raise
- 
+- Use simple everyday Hindi
+- Keep planet names in English
+- Keep zodiac sign names in English
+- Keep Dasha, Lagna, Rahu, Ketu unchanged
+- Return only translated text
+
+Text:
+{text}
+"""
+
+    client = Groq(
+        api_key=settings.GROQ_API_KEY
+    )
+
+    response = client.chat.completions.create(
+        model="llama-3.3-70b-versatile",
+        messages=[
+            {
+                "role": "user",
+                "content": prompt
+            }
+        ],
+        temperature=0.3,
+        max_tokens=2000
+    )
+
+    return response.choices[0].message.content.strip()
