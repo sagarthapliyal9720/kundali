@@ -281,16 +281,34 @@ class AskKundaliView(APIView):
 
 
 def _call_llm(prompt: str) -> str:
-    from google import genai
+
+    
+    
     from django.conf import settings
 
-    client = genai.Client(api_key=settings.GEMINI_API_KEY)
+    import httpx
+    from google import genai
+
+    print("CALLING GEMINI")
+
+    http_client = httpx.Client(
+        timeout=20.0
+    )
+
+    client = genai.Client(
+        api_key=settings.GEMINI_API_KEY,
+        http_options={
+            "client": http_client
+        }
+    )
 
     try:
         response = client.models.generate_content(
             model="gemini-2.5-flash",   # current free tier model
             contents=prompt,
+
         )
+        print("GEMINI RESPONSE RECEIVED")
         return response.text
 
     except Exception as e:
